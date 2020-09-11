@@ -3,10 +3,9 @@ import React from 'react';
 function App() {
   return (
     <div className="app">
-      App
-      {/* 根文件 */}
+      App      
     </div>
   );
 }
-
+/* 根文件 */
 export default App;
