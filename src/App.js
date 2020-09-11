@@ -4,6 +4,7 @@ function App() {
   return (
     <div className="app">
       App
+      {/* 根文件 */}
     </div>
   );
 }
