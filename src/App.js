@@ -19,7 +19,7 @@ function App() {
         {/* 重定向 */}
         {/* 第一种重定向写法： */}
         {/* <Redirect exact from="/" to="/home" /> */}
-        {/* 第二种重定向写法 => 推荐使用 
+        {/* 第二种重定向写法 => 推荐使用 => 模糊匹配
             exact => 精确匹配 */}
         <Route exact path="/" render={() => <Redirect to="/home" />} />
         {/* 一级路由 */}

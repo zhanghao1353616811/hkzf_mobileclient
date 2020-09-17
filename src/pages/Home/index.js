@@ -37,7 +37,6 @@ class Home extends Component {
     })
   }
   render() {
-    console.log(this.props)
     return (
       <div className="home">
         {/* 二级路由配置 */}
