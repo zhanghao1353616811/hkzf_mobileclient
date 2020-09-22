@@ -31,9 +31,9 @@ class Index extends Component {
           infinite
         >
           {/* 列表渲染 */}
-          {this.state.swiper.map((val) => (
+          {this.state.swiper.map(val => (
             <a
-              key={val.id}
+              key={val}
               href="http://www.itheima.com"
               style={{
                 display: 'inline-block',

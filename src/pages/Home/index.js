@@ -16,7 +16,7 @@ class Home extends Component {
   }
   // 渲染全局菜单的方法
   renderTabItems = () => {
-    return tabItems.map((item) => {
+    return tabItems.map((item, index) => {
       return (
         <TabBar.Item
           title={item.title}
