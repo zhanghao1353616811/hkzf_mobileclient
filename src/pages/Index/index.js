@@ -1,23 +1,27 @@
+/**
+ * 默认首页
+ */
+
 import React, { Component } from 'react'
 import { Carousel } from 'antd-mobile'
-import axios from 'axios'
-
+import { BASE_URL } from '../../utils/axios'
+import {getSwiper} from '../../utils/api/home'
 class Index extends Component {
   state = {
     // 轮播图的数据
     swiper: ['1', '2', '3'],
-    // 设置了轮播图的高度
-    imgHeight: 176,
+    // 设置了轮播图的高度 默认占位
+    imgHeight: 212,
   }
   componentDidMount() {
     this.getSwiper()
   }
   getSwiper = async () => {
-      const res = await axios.get('http://api-haoke-dev.itheima.net/home/swiper')
-      const { body, status } = res.data
+      const res = await getSwiper()
+      const { data, status } = res
       if (status === 200) {
           this.setState({
-              swiper: body
+              swiper: data
           })
       }
   }
@@ -43,7 +47,7 @@ class Index extends Component {
               }}
             >
               <img
-                src={`http://api-haoke-dev.itheima.net${val.imgSrc}`}
+                src={`${BASE_URL}${val.imgSrc}`}
                 alt=""
                 style={{ width: '100%', verticalAlign: 'top' }}
                 // 1、onLoad事件 => 加载完毕触发
