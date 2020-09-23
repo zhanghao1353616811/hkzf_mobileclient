@@ -21,7 +21,12 @@ ul,li {
 }
 
 * {
-  /* touch-action: pan-y;
-  touch-action: none; */
+  /* 浏览器必须要在执行事件处理函数后 才能知道有没有调用过 preventDefault() => 导致浏览器不能及时响应滚动 略有延迟 
+    为了让页面滚动的效果如丝般顺滑 从谷歌56开始 在window document 和 body上注册的 touchstart和touchmove事件处理函数
+    会默认为是 passive: true 让浏览器忽略 preventDefault()就可以第一时间滚动
+  */
+  touch-action: pan-y;
+  /* 上下二选一 */
+  /* touch-action: none; */
   box-sizing: border-box; 
 }

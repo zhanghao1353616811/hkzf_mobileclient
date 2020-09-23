@@ -9,19 +9,25 @@ import {getSwiper} from '../../utils/api/home'
 class Index extends Component {
   state = {
     // 轮播图的数据
-    swiper: ['1', '2', '3'],
+    swiper: [],
+    // 处理调用后端接口后 不自动播放的问题
+    autoplay: false,
     // 设置了轮播图的高度 默认占位
     imgHeight: 212,
   }
   componentDidMount() {
     this.getSwiper()
   }
+  // 获取轮播图数据
   getSwiper = async () => {
       const res = await getSwiper()
       const { data, status } = res
       if (status === 200) {
+        // setState() 中数据异步
           this.setState({
               swiper: data
+          },()=>{
+            this.setState({ autoplay: true })
           })
       }
   }
@@ -30,7 +36,7 @@ class Index extends Component {
       <div>
         <Carousel
           // 自动播放
-          autoplay={true}
+          autoplay={this.state.autoplay}
           // 循环播放
           infinite
         >
