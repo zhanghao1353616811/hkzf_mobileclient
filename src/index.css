@@ -26,7 +26,7 @@ ul,li {
     会默认为是 passive: true 让浏览器忽略 preventDefault()就可以第一时间滚动
   */
   touch-action: pan-y;
-  /* 上下二选一 */
+  /* 上下可二选一 */
   /* touch-action: none; */
   box-sizing: border-box; 
 }
