@@ -18,3 +18,12 @@
          }
      })
  }
+
+  //  获取最新资讯
+  export function getNew(area='AREA%7C88cff55c-aaa4-e2e0') {
+    return axios.get('/home/news',{
+        params: {
+           area
+        }
+    })
+}
