@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 
 import { TabBar } from 'antd-mobile'
-import './index.css'
+import './index.scss'
 // 导入二级路由组件
 import Index from '../Index'
 import House from '../House'

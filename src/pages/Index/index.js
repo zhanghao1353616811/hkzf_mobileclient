@@ -3,25 +3,30 @@
  */
 
 import React, { Component } from 'react'
-import { Carousel, Flex, img } from 'antd-mobile'
+import { Carousel, Flex, Grid } from 'antd-mobile'
 import { BASE_URL } from '../../utils/axios'
-import { getSwiper } from '../../utils/api/home'
+import { getSwiper, getGroup } from '../../utils/api/home'
 import navs from '../../utils/navs_config'
 // 导入首页样式
-import './index.css'
+import './index.scss'
 
 class Index extends Component {
   state = {
     // 轮播图的数据
     swiper: [],
+    // 租房小组的数据
+    grid: [],
     // 处理调用后端接口后 不自动播放的问题
     autoplay: false,
     // 设置了轮播图的高度 默认占位
     imgHeight: 212,
   }
+
   componentDidMount() {
     this.getSwiper()
+    this.getGroups()
   }
+
   // 获取轮播图数据
   getSwiper = async () => {
     const res = await getSwiper()
@@ -39,12 +44,22 @@ class Index extends Component {
     }
   }
 
+  // 获取租房小组
+  getGroups = async () =>{
+    const res = await getGroup()
+    console.log(res)
+    const { status, data } = res
+    if (status === 200) {
+      this.setState({ grid: data })
+    }
+  }
+
   // 渲染轮播图
   renderSwiper = () => {
     return this.state.swiper.map((val) => (
       <a
         key={val}
-        href="http://www.itheima.com"
+        href="https://github.com/zhanghao1353616811/hkzf_mobileclient"
         style={{
           display: 'inline-block',
           width: '100%',
@@ -88,6 +103,7 @@ class Index extends Component {
   render() {
     return (
       <div>
+        {/* 轮播图 */}
         <Carousel
           // 自动播放
           autoplay={this.state.autoplay}
@@ -97,7 +113,33 @@ class Index extends Component {
           {/* 列表渲染 */}
           {this.renderSwiper()}
         </Carousel>
+        {/* 栏目导航 */}
         <Flex className="nav">{this.renderNavs()}</Flex>
+        {/* 租房小组 */}
+        <div className="group">
+          {/* title */}
+          <Flex className="group-title" justify="between">
+            <h3>租房小组</h3>
+            <span>更多</span>
+          </Flex>
+          {/* 宫格布局 */}
+          <Grid
+            data={this.state.grid}
+            columnNum={2}
+            square={false}
+            hasLine={false}
+            renderItem={(item) => (
+              // item结构
+            <Flex className="grid-item" justify="between">
+              <div className="desc">
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+              <img src={`${BASE_URL}${item.imgSrc}`} alt="" />
+            </Flex>
+            )}
+          />
+        </div>
       </div>
     )
   }
