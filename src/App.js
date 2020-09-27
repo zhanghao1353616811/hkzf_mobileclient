@@ -19,13 +19,14 @@ function App() {
         {/* 重定向 */}
         {/* 第一种重定向写法： */}
         {/* <Redirect exact from="/" to="/home" /> */}
-        {/* 第二种重定向写法 => 推荐使用 => 模糊匹配
-            exact => 精确匹配 */}
+        {/* 第二种重定向写法 => 推荐使用 => 模糊匹配 exact => 精确匹配 */}
         <Route exact path="/" render={() => <Redirect to="/home" />} />
         {/* 一级路由 */}
         {/* /home 下配置二级路由 => 默认首页、找房、我的 */}
         <Route path="/home" component={Home} />
+        {/* 城市列表 */}
         <Route path="/cityList" component={CityList} />
+        {/* 地图找房 */}
         <Route path="/map" component={Map} />
 
         {/* 404页面  必须写在一级路由同级 不然总是显示404页面 */}

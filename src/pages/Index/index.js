@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { Carousel, Flex, Grid, WingBlank } from 'antd-mobile'
+import { Carousel, Flex, Grid, WingBlank, SearchBar } from 'antd-mobile'
 import { BASE_URL } from '../../utils/axios'
 import { getSwiper, getGroup, getNew } from '../../utils/api/home'
 import navs from '../../utils/navs_config'
@@ -14,6 +14,8 @@ class Index extends Component {
   state = {
     // 轮播图的数据
     swiper: [],
+    // 顶部搜索关键词
+    keyword: '',
     // 租房小组的数据
     grid: [],
     // 资讯列表的数据
@@ -29,30 +31,17 @@ class Index extends Component {
   }
 
   // 使用 Promise.all => 统一处理首页所有接口调用
+  // 使用 Promise.all方法 传入一个包含多个Promise对象的数组 返回resolve结果数据
+  // 只有传入的三个方法都请求到数据才返回结果 => 返回的结果是根据传入的顺序而进行排序
   getAllData = async () => {
     const res = await Promise.all([getSwiper(), getGroup(), getNew()])
     if (res[0].status === 200) {
       // setState() 中数据异步
-      this.setState({
-        swiper: res[0].data,
-        grid: res[1].data,
-        news: res[2].data,
-      }, () => {
-        this.setState({ autoplay: true })
-      })
-    }
-  }
-
-
-  // 获取轮播图数据
-  getSwiper = async () => {
-    const res = await getSwiper()
-    const { data, status } = res
-    if (status === 200) {
-      // setState() 中数据异步
       this.setState(
         {
-          swiper: data,
+          swiper: res[0].data,
+          grid: res[1].data,
+          news: res[2].data,
         },
         () => {
           // 有数据之后在设置自动播放
@@ -93,6 +82,28 @@ class Index extends Component {
     ))
   }
 
+  // 渲染顶部导航
+  renderTopNav = () => {
+    const { push } = this.props.history
+    return (
+      <Flex justify="around" className="topNav">
+        <div className="searchBox">
+          <div className="city" onClick={() => push('/cityList')}>
+            北京
+            <i className="iconfont icon-arrow" />
+          </div>
+          <SearchBar
+            value={this.state.keyword}
+            onChange={(v) => this.setState({ keyword: v })}
+            placeholder="请输入小区或地址"
+          />
+        </div>
+        <div className="map" onClick={() => push('/map')}>
+          <i key="0" className="iconfont icon-map" />
+        </div>
+      </Flex>
+    )
+  }
   // 渲染栏目导航
   renderNavs = () => {
     return navs.map((item) => {
@@ -129,6 +140,8 @@ class Index extends Component {
   render() {
     return (
       <div>
+        {/* 顶部导航 */}
+        {this.renderTopNav()}
         {/* 轮播图 */}
         <Carousel
           // 自动播放
