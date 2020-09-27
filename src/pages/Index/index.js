@@ -16,6 +16,7 @@ class Index extends Component {
     swiper: [],
     // 租房小组的数据
     grid: [],
+    // 资讯列表的数据
     news: [],
     // 处理调用后端接口后 不自动播放的问题
     autoplay: false,
@@ -24,10 +25,24 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    this.getSwiper()
-    this.getGroups()
-    this.getNews()
+    this.getAllData()
   }
+
+  // 使用 Promise.all => 统一处理首页所有接口调用
+  getAllData = async () => {
+    const res = await Promise.all([getSwiper(), getGroup(), getNew()])
+    if (res[0].status === 200) {
+      // setState() 中数据异步
+      this.setState({
+        swiper: res[0].data,
+        grid: res[1].data,
+        news: res[2].data,
+      }, () => {
+        this.setState({ autoplay: true })
+      })
+    }
+  }
+
 
   // 获取轮播图数据
   getSwiper = async () => {
@@ -40,29 +55,10 @@ class Index extends Component {
           swiper: data,
         },
         () => {
+          // 有数据之后在设置自动播放
           this.setState({ autoplay: true })
         }
       )
-    }
-  }
-
-  // 获取最新资讯列表
-  getNews = async () => {
-    const res = await getNew()
-    const { status, data } = res
-    if (status === 200) {
-      this.setState({
-        news: data
-      })
-    }
-  }
-
-  // 获取租房小组
-  getGroups = async () => {
-    const res = await getGroup()
-    const { status, data } = res
-    if (status === 200) {
-      this.setState({ grid: data })
     }
   }
 
@@ -153,7 +149,8 @@ class Index extends Component {
             <span>更多</span>
           </Flex>
           {/* 宫格布局 */}
-          <Grid data={this.state.grid}
+          <Grid
+            data={this.state.grid}
             columnNum={2}
             square={false}
             hasLine={false}
@@ -168,12 +165,11 @@ class Index extends Component {
               </Flex>
             )}
           />
-          {/* 最新资讯 */}
-          {/* 最新资讯 */}
-          <div className="news">
-            <h3 className="group-title">最新资讯</h3>
-            <WingBlank size="md">{this.renderNews()}</WingBlank>
-          </div>
+        </div>
+        {/* 最新资讯 */}
+        <div className="news">
+          <h3 className="group-title">最新资讯</h3>
+          <WingBlank size="md">{this.renderNews()}</WingBlank>
         </div>
       </div>
     )
