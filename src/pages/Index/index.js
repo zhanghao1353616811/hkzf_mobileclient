@@ -6,19 +6,25 @@ import React, { Component } from 'react'
 import { Carousel, Flex, Grid, WingBlank, SearchBar } from 'antd-mobile'
 import { BASE_URL } from '../../utils/axios'
 import { getSwiper, getGroup, getNew } from '../../utils/api/home'
+import { getCityInfo } from '../../utils/api/city'
 import navs from '../../utils/navs_config'
 // 导入首页样式
 import './index.scss'
 
 class Index extends Component {
   state = {
-    // 轮播图的数据
+    // 轮播图数据
     swiper: [],
     // 顶部搜索关键词
     keyword: '',
-    // 租房小组的数据
+    // 当前城市数据
+    currentCity: {
+      label: '',
+      value: '',
+    },
+    // 租房小组数据
     grid: [],
-    // 资讯列表的数据
+    // 资讯列表数据
     news: [],
     // 处理调用后端接口后 不自动播放的问题
     autoplay: false,
@@ -28,6 +34,7 @@ class Index extends Component {
 
   componentDidMount() {
     this.getAllData()
+    this.getCurrentCity()
   }
 
   // 使用 Promise.all => 统一处理首页所有接口调用
@@ -49,6 +56,21 @@ class Index extends Component {
         }
       )
     }
+  }
+
+  // 获取当前城市
+  getCurrentCity = () => {
+    // 定位当前城市 (IP定位)
+    let myCity = new window.BMapGL.LocalCity()
+    myCity.get(async (result) => {
+      const cityName = result.name
+      const { status, data } = await getCityInfo(cityName)
+      if (status === 200) {
+        this.setState({
+          currentCity: data,
+        })
+      }
+    })
   }
 
   // 渲染轮播图
