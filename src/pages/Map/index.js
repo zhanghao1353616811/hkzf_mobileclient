@@ -3,11 +3,14 @@
  */
 
 import React, { Component } from 'react'
+import { NavBar, Icon } from 'antd-mobile'
+// 导入地图样式
+import './index.scss'
 
 class Map extends Component {
   componentDidMount() {
     this.initMap()
-}
+  }
 
   // 初始化百度地图
   initMap = () => {
@@ -22,7 +25,15 @@ class Map extends Component {
   render() {
     return (
       <div className="mapBox">
-          {/* 创建地图容器元素 => 百度地图显示位置 */}
+        {/* 导航返回 */}
+        <NavBar
+          mode="dark"
+          icon={<Icon type="left" />}
+          onLeftClick={() => this.props.history.goBack()}
+        >
+          地图找房
+        </NavBar>
+        {/* 创建地图容器元素 => 百度地图显示位置 */}
         <div id="container"></div>
       </div>
     )
