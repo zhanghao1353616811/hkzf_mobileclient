@@ -3,12 +3,13 @@
  */
 
 import React, { Component } from 'react'
-import { getCityList } from '../../utils/api/city'
+import { getCityList, getHotCity } from '../../utils/api/city'
 
 class CityList extends Component {
   componentDidMount() {
     this.getCityListData()
   }
+
   // 处理数据 => 做列表渲染
   // 1、创建 formatCities 方法
   // 2、定义变量 =》
@@ -19,7 +20,8 @@ class CityList extends Component {
   // 格式化城市列表数据
   formatCities = (data) => {
     // 城市归类的对象
-    let cityList = {}, cityIndex = []
+    let cityList = {},
+      cityIndex = []
     data.forEach((item) => {
       // 数组排重 截取城市的拼音首字母
       const first = item.short.slice(0, 1)
@@ -36,15 +38,23 @@ class CityList extends Component {
     cityIndex = Object.keys(cityList).sort()
     return {
       cityIndex,
-      cityList
+      cityList,
     }
   }
 
-  // 获取城市列表所需数据
+  // 获取城市列表数据
   getCityListData = async () => {
-    const res = await getCityList()
-    const { cityIndex,cityList } = this.formatCities(res.data)
-    console.log(cityList)
+    const { status, data } = await getCityList()
+    if (status === 200) {
+      const { cityIndex, cityList } = this.formatCities(data)
+      // 获取热门城市 => 加到处理完的数据里面
+      // 结构 => 变量 : 别名
+      const { status: hotStatus, data: hot } = await getHotCity()
+      if (hotStatus === 200) {
+          cityIndex.unshift('hot')
+          cityList['hot'] = hot
+      }
+    }
   }
 
   render() {

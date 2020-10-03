@@ -6,8 +6,9 @@ import React, { Component } from 'react'
 import { Carousel, Flex, Grid, WingBlank, SearchBar } from 'antd-mobile'
 import { BASE_URL } from '../../utils/axios'
 import { getSwiper, getGroup, getNew } from '../../utils/api/home'
-import { getCityInfo } from '../../utils/api/city'
+// import { getCityInfo } from '../../utils/api/city'
 import navs from '../../utils/navs_config'
+import { getCurrentCity } from '../../utils/index'
 // 导入首页样式
 import './index.scss'
 
@@ -19,7 +20,7 @@ class Index extends Component {
     keyword: '',
     // 当前城市数据
     currentCity: {
-      label: '',
+      label: '--',
       value: '',
     },
     // 租房小组数据
@@ -34,7 +35,7 @@ class Index extends Component {
 
   componentDidMount() {
     this.getAllData()
-    this.getCurrentCity()
+    this.getCurrCity()
   }
 
   // 使用 Promise.all => 统一处理首页所有接口调用
@@ -59,18 +60,12 @@ class Index extends Component {
   }
 
   // 获取当前城市
-  getCurrentCity = () => {
-    // 定位当前城市 (IP定位)
-    let myCity = new window.BMapGL.LocalCity()
-    myCity.get(async (result) => {
-      const cityName = result.name
-      const { status, data } = await getCityInfo(cityName)
-      if (status === 200) {
-        this.setState({
-          currentCity: data,
-        })
-      }
-    })
+  getCurrCity = async () => {
+    const res = await getCurrentCity()
+    console.log(res);
+    this.setState({ 
+      currentCity: res
+     })
   }
 
   // 渲染轮播图
@@ -111,7 +106,7 @@ class Index extends Component {
       <Flex justify="around" className="topNav">
         <div className="searchBox">
           <div className="city" onClick={() => push('/cityList')}>
-            北京
+            {this.state.currentCity.label}
             <i className="iconfont icon-arrow" />
           </div>
           <SearchBar
