@@ -1,6 +1,7 @@
 /**
  * 定义: 公共方法(复用)
  */
+
 import { getCityInfo } from './api/city'
 
 // Promise本身是同步的, 但它的 then 方法和 catch 方法是异步的
@@ -24,6 +25,8 @@ export function getCurrentCity() {
         // 调用后端接口获取当前城市详细信息
         const { status, data } = await getCityInfo(cityName)
         if (status === 200) {
+        console.log(data, 'data');
+
           // 存储到本地? => 获取的数据怎么给外边用? => 通过resolve传递数据 => 第一次存储到本地 => 字符串
           localStorage.setItem('hkzf_city', JSON.stringify(data))
           resolve(data)

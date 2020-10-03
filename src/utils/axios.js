@@ -1,5 +1,5 @@
 /**
- * 全局axios
+ * 全局 axios
  */
 
 //  导入axios
@@ -42,5 +42,6 @@ axios_instance.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
 export { BASE_URL }
 export default axios_instance

@@ -1,4 +1,5 @@
 import React from 'react'
+
 // 导入路由的三个基础组件
 import {
   BrowserRouter as Router,
@@ -6,6 +7,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom'
+
 // 导入路由对应组件
 import Home from './pages/Home'
 import CityList from './pages/CityList'
@@ -35,5 +37,6 @@ function App() {
     </Router>
   )
 }
+
 /* 根文件 */
 export default App

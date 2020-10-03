@@ -20,7 +20,7 @@ class Index extends Component {
     keyword: '',
     // 当前城市数据
     currentCity: {
-      label: '--',
+      label: '',
       value: '',
     },
     // 租房小组数据
@@ -63,9 +63,9 @@ class Index extends Component {
   getCurrCity = async () => {
     const res = await getCurrentCity()
     console.log(res);
-    this.setState({ 
-      currentCity: res
-     })
+    this.setState({
+      currentCity: res,
+    })
   }
 
   // 渲染轮播图

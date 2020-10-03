@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react'
 import { getCityList, getHotCity } from '../../utils/api/city'
+import { getCurrentCity } from '../../utils/index'
 
 class CityList extends Component {
   componentDidMount() {
@@ -26,7 +27,7 @@ class CityList extends Component {
       // 数组排重 截取城市的拼音首字母
       const first = item.short.slice(0, 1)
       // 按首字母归类 => 判断对象中是否存在某个属性
-      if (!(first in cityList)) {
+      if (!cityList[first]) {
         // 没有这个首字母的 key (城市)
         cityList[first] = [item]
       } else {
@@ -51,9 +52,17 @@ class CityList extends Component {
       // 结构 => 变量 : 别名
       const { status: hotStatus, data: hot } = await getHotCity()
       if (hotStatus === 200) {
-          cityIndex.unshift('hot')
-          cityList['hot'] = hot
+        // 加入热门城市数据
+        cityIndex.unshift('hot')
+        // 加入热门城市 key
+        cityList['hot'] = hot
+        // 加入当前城市数据
+        const res = await getCurrentCity()
+        cityList['curr'] = [res]
+        // 加入当前城市 key
+        cityIndex.unshift('curr')
       }
+      console.log(cityList);
     }
   }
 
