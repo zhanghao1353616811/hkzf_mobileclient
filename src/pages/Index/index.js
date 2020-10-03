@@ -62,7 +62,6 @@ class Index extends Component {
   // 获取当前城市
   getCurrCity = async () => {
     const res = await getCurrentCity()
-    console.log(res);
     this.setState({
       currentCity: res,
     })
