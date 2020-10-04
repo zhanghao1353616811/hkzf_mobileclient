@@ -121,6 +121,18 @@ class CityList extends Component {
     )
   }
 
+  // 计算行高
+  calcRowHeight = ({ index }) => {
+    const { cityIndex, cityList } = this.state
+    // 获取归类的索引值 key
+    const letter = cityIndex[index]
+    // 根据 key 获取归类的城市
+    const cityListData = cityList[letter]
+    // 根据每行归类的城市个数 => 动态计算行高 => title高度 + 城市高度*城市个数
+    const cityListHeight = 36 + 50*cityListData.length 
+    return cityListHeight
+  }
+
   render() {
     return (
       <div className="cityList">
@@ -137,11 +149,11 @@ class CityList extends Component {
           {({ height, width }) => (
             // children子组件
             <List
+              width={width}
               height={height}
               rowCount={this.state.cityIndex.length}
-              rowHeight={250}
+              rowHeight={this.calcRowHeight}
               rowRenderer={this.rowRenderer}
-              width={width}
             />
           )}
         </AutoSizer>
