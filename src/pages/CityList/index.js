@@ -4,11 +4,11 @@
 
 import React, { Component } from 'react'
 import { getCityList, getHotCity } from '../../utils/api/city'
-import { getCurrentCity } from '../../utils/index'
+import { getCurrentCity, setLocalData, CURR_CITY } from '../../utils/index'
 
 // 导入列表组件库
 import { AutoSizer, List } from 'react-virtualized'
-import { NavBar, Icon } from 'antd-mobile'
+import { NavBar, Icon, Toast } from 'antd-mobile'
 import './index.scss'
 
 class CityList extends Component {
@@ -81,7 +81,7 @@ class CityList extends Component {
       }
     }
   }
-  
+
   // 格式化 key
   formatKey = (key) => {
     switch (key) {
@@ -95,6 +95,21 @@ class CityList extends Component {
     }
   }
 
+  // 选择和切换城市
+  switchCity = (item, e) => {
+    // 有数据的城市
+    const hasData = ['北京', '上海', '广州', '深圳']
+    if (hasData.includes(item.label)) {
+      // 更新本地存储当前城市数据
+      setLocalData(CURR_CITY, JSON.stringify(item))
+      this.props.history.goBack()
+    } else {
+      // 提示无数据
+      Toast.info('该城市暂无房源数据', 2)
+    }
+  }
+
+  // 渲染列表行 (cityListItem)
   rowRenderer = ({
     key, // Unique key within array of rows
     index, // Index of row within collection
@@ -106,14 +121,19 @@ class CityList extends Component {
     // 获取归类的索引值 key
     const letter = cityIndex[index]
     // 根据 key 获取归类的城市
-    const cityListData = cityList[letter]
+    const cityListItem = cityList[letter]
     return (
       <div key={key} style={style} className="city-item">
         {/* 标题 */}
         <div className="title">{this.formatKey(letter)}</div>
         {/* 可能是多个 => 归类的城市 */}
-        {cityListData.map((item) => (
-          <div className="name" key={item.value}>
+        {cityListItem.map((item) => (
+          // 绑定事件传参数 => 函数套函数
+          <div
+            className="name"
+            key={item.value}
+            onClick={(e) => this.switchCity(item, e)}
+          >
             {item.label}
           </div>
         ))}
@@ -127,9 +147,9 @@ class CityList extends Component {
     // 获取归类的索引值 key
     const letter = cityIndex[index]
     // 根据 key 获取归类的城市
-    const cityListData = cityList[letter]
+    const cityListItem = cityList[letter]
     // 根据每行归类的城市个数 => 动态计算行高 => title高度 + 城市高度*城市个数
-    const cityListHeight = 36 + 50*cityListData.length 
+    const cityListHeight = 36 + 50 * cityListItem.length
     return cityListHeight
   }
 

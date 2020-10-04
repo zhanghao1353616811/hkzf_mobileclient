@@ -119,6 +119,7 @@ class Index extends Component {
       </Flex>
     )
   }
+  
   // 渲染栏目导航
   renderNavs = () => {
     return navs.map((item) => {

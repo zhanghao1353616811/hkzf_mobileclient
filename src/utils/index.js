@@ -51,3 +51,5 @@ export function getCurrentCity() {
     return Promise.resolve(currentCity)
   }
 }
+
+export { CURR_CITY }
