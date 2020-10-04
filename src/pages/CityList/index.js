@@ -5,10 +5,31 @@
 import React, { Component } from 'react'
 import { getCityList, getHotCity } from '../../utils/api/city'
 import { getCurrentCity } from '../../utils/index'
+// 导入列表组件库
+import { AutoSizer, List } from 'react-virtualized'
+import { NavBar, Icon } from 'antd-mobile'
+import './index.scss'
+
+const list = Array.from(new Array(100)).map((item, index) => index)
 
 class CityList extends Component {
   componentDidMount() {
     this.getCityListData()
+  }
+
+  rowRenderer = ({
+    key, // Unique key within array of rows
+    index, // Index of row within collection
+    isScrolling, // The List is currently being scrolled
+    isVisible, // This row is visible within the List (eg it is not an overscanned row)
+    style, // Style object to be applied to row (to position it)
+  }) => {
+    return (
+      <div key={key} style={style}>
+        {/* 渲染数据 */}
+        {list[index]}
+      </div>
+    )
   }
 
   // 处理数据 => 做列表渲染
@@ -62,12 +83,36 @@ class CityList extends Component {
         // 加入当前城市 key
         cityIndex.unshift('curr')
       }
-      console.log(cityList);
+      console.log(cityList)
     }
   }
 
   render() {
-    return <div>CityList</div>
+    return (
+      <div className="cityList">
+        {/* 导航返回 */}
+        <NavBar
+          mode="dark"
+          icon={<Icon type="left" />}
+          onLeftClick={() => this.props.history.goBack()}
+        >
+          城市选择
+        </NavBar>
+        {/* 城市列表 */}
+        <AutoSizer>
+          {({ height, width }) => (
+            // children子组件
+            <List
+              height={height}
+              rowCount={list.length}
+              rowHeight={20}
+              rowRenderer={this.rowRenderer}
+              width={width}
+            />
+          )}
+        </AutoSizer>
+      </div>
+    )
   }
 }
 
