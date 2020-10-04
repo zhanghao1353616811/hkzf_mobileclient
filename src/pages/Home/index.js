@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 
-import { TabBar } from 'antd-mobile'
-import './index.scss'
 // 导入二级路由组件
 import Index from '../Index'
 import House from '../House'
 import Profile from '../Profile'
 import tabItems from '../../utils/tabBar.config'
+
+import { TabBar } from 'antd-mobile'
+import './index.css'
 
 class Home extends Component {
   // tab 状态数据

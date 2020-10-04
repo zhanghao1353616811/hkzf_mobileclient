@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import { NavBar, Icon } from 'antd-mobile'
 // 导入地图样式
-import './index.scss'
+import './index.css'
 
 class Map extends Component {
   componentDidMount() {

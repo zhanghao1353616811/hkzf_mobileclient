@@ -5,31 +5,22 @@
 import React, { Component } from 'react'
 import { getCityList, getHotCity } from '../../utils/api/city'
 import { getCurrentCity } from '../../utils/index'
+
 // 导入列表组件库
 import { AutoSizer, List } from 'react-virtualized'
 import { NavBar, Icon } from 'antd-mobile'
 import './index.scss'
 
-const list = Array.from(new Array(100)).map((item, index) => index)
-
 class CityList extends Component {
-  componentDidMount() {
-    this.getCityListData()
+  state = {
+    // 城市列表的索引数据
+    cityIndex: [],
+    // 城市归类的数据
+    cityList: {},
   }
 
-  rowRenderer = ({
-    key, // Unique key within array of rows
-    index, // Index of row within collection
-    isScrolling, // The List is currently being scrolled
-    isVisible, // This row is visible within the List (eg it is not an overscanned row)
-    style, // Style object to be applied to row (to position it)
-  }) => {
-    return (
-      <div key={key} style={style}>
-        {/* 渲染数据 */}
-        {list[index]}
-      </div>
-    )
+  componentDidMount() {
+    this.getCityListData()
   }
 
   // 处理数据 => 做列表渲染
@@ -42,8 +33,8 @@ class CityList extends Component {
   // 格式化城市列表数据
   formatCities = (data) => {
     // 城市归类的对象
-    let cityList = {},
-      cityIndex = []
+    let cityIndex = [],
+      cityList = {}
     data.forEach((item) => {
       // 数组排重 截取城市的拼音首字母
       const first = item.short.slice(0, 1)
@@ -82,9 +73,52 @@ class CityList extends Component {
         cityList['curr'] = [res]
         // 加入当前城市 key
         cityIndex.unshift('curr')
+        // 响应式
+        this.setState({
+          cityIndex,
+          cityList,
+        })
       }
-      console.log(cityList)
     }
+  }
+  
+  // 格式化 key
+  formatKey = (key) => {
+    switch (key) {
+      case 'curr':
+        return '当前城市'
+      case 'hot':
+        return '热门城市'
+      // 其他的 key 转为大写
+      default:
+        return key.toUpperCase()
+    }
+  }
+
+  rowRenderer = ({
+    key, // Unique key within array of rows
+    index, // Index of row within collection
+    isScrolling, // The List is currently being scrolled
+    isVisible, // This row is visible within the List (eg it is not an overscanned row)
+    style, // Style object to be applied to row (to position it)
+  }) => {
+    const { cityIndex, cityList } = this.state
+    // 获取归类的索引值 key
+    const letter = cityIndex[index]
+    // 根据 key 获取归类的城市
+    const cityListData = cityList[letter]
+    return (
+      <div key={key} style={style} className="city-item">
+        {/* 标题 */}
+        <div className="title">{this.formatKey(letter)}</div>
+        {/* 可能是多个 => 归类的城市 */}
+        {cityListData.map((item) => (
+          <div className="name" key={item.value}>
+            {item.label}
+          </div>
+        ))}
+      </div>
+    )
   }
 
   render() {
@@ -104,8 +138,8 @@ class CityList extends Component {
             // children子组件
             <List
               height={height}
-              rowCount={list.length}
-              rowHeight={20}
+              rowCount={this.state.cityIndex.length}
+              rowHeight={250}
               rowRenderer={this.rowRenderer}
               width={width}
             />

@@ -6,7 +6,6 @@ import React, { Component } from 'react'
 import { Carousel, Flex, Grid, WingBlank, SearchBar } from 'antd-mobile'
 import { BASE_URL } from '../../utils/axios'
 import { getSwiper, getGroup, getNew } from '../../utils/api/home'
-// import { getCityInfo } from '../../utils/api/city'
 import navs from '../../utils/navs_config'
 import { getCurrentCity } from '../../utils/index'
 // 导入首页样式
