@@ -17,10 +17,15 @@ class CityList extends Component {
     cityIndex: [],
     // 城市归类的数据
     cityList: {},
+    // 当前位置的索引 => 激活索引样式状态
+    activeIndex: 0,
   }
 
   componentDidMount() {
     this.getCityListData()
+    // 获取list组件的实例
+    // 创建ref对象 => 组件上创建ref对象
+    this.listRef = React.createRef()
   }
 
   // 处理数据 => 做列表渲染
@@ -83,12 +88,12 @@ class CityList extends Component {
   }
 
   // 格式化 key
-  formatKey = (key) => {
+  formatKey = (key, isIndex) => {
     switch (key) {
       case 'curr':
-        return '当前城市'
+        return isIndex ? '当' : '当前城市'
       case 'hot':
-        return '热门城市'
+        return isIndex ? '热' : '热门城市'
       // 其他的 key 转为大写
       default:
         return key.toUpperCase()
@@ -96,7 +101,7 @@ class CityList extends Component {
   }
 
   // 选择和切换城市
-  switchCity = (item, e) => {
+  switchCity = (item) => {
     // 有数据的城市
     const hasData = ['北京', '上海', '广州', '深圳']
     if (hasData.includes(item.label)) {
@@ -110,13 +115,7 @@ class CityList extends Component {
   }
 
   // 渲染列表行 (cityListItem)
-  rowRenderer = ({
-    key, // Unique key within array of rows
-    index, // Index of row within collection
-    isScrolling, // The List is currently being scrolled
-    isVisible, // This row is visible within the List (eg it is not an overscanned row)
-    style, // Style object to be applied to row (to position it)
-  }) => {
+  rowRenderer = ({ key, index, style }) => {
     const { cityIndex, cityList } = this.state
     // 获取归类的索引值 key
     const letter = cityIndex[index]
@@ -132,7 +131,7 @@ class CityList extends Component {
           <div
             className="name"
             key={item.value}
-            onClick={(e) => this.switchCity(item, e)}
+            onClick={() => this.switchCity(item)}
           >
             {item.label}
           </div>
@@ -153,6 +152,36 @@ class CityList extends Component {
     return cityListHeight
   }
 
+  // 渲染右侧索引
+  renderCityIndex = () => {
+    const { cityIndex, activeIndex } = this.state
+    return cityIndex.map((item, index) => {
+      return (
+        <li key={item} className="city-index-item">
+          <span
+            className={activeIndex === index ? 'index-active' : ''}
+            onClick={() => {
+              this.listRef.current.scrollToRow(index)
+            }}
+          >
+            {this.formatKey(item, true)}
+          </span>
+        </li>
+      )
+    })
+  }
+
+  // 滚动列表触发(每次重新渲染列表后都会触发)
+  onRowsRendered = ({ startIndex }) => {
+    // 获取当前滚动到的位置索引startIndex
+    // 更新activeIndex
+    if (this.state.activeIndex !== startIndex) {
+      this.setState({
+        activeIndex: startIndex,
+      })
+    }
+  }
+
   render() {
     return (
       <div className="cityList">
@@ -169,14 +198,20 @@ class CityList extends Component {
           {({ height, width }) => (
             // children子组件
             <List
+              ref={this.listRef}
               width={width}
               height={height}
+              // 设置scrollToAlignment="start"属性 => 定位时始终将行与列表顶部对齐
+              scrollToAlignment="start"
+              onRowsRendered={this.onRowsRendered}
               rowCount={this.state.cityIndex.length}
               rowHeight={this.calcRowHeight}
               rowRenderer={this.rowRenderer}
             />
           )}
         </AutoSizer>
+        {/* 右侧索引列表 */}
+        <ul className="city-index">{this.renderCityIndex()}</ul>
       </div>
     )
   }
