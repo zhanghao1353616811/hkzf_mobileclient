@@ -5,14 +5,21 @@ import PropTypes from 'prop-types'
 
 import styles from './index.module.css'
 
-function FilterFooter({ className, style }) {
+function FilterFooter({ className, style, onOkPicker, onCancelPicker }) {
   return (
     <Flex style={style} className={[styles.root, className || ''].join(' ')}>
       {/* 取消按钮 */}
-      <span className={[styles.btn, styles.cancel].join(' ')}>取消</span>
+      <span
+        className={[styles.btn, styles.cancel].join(' ')}
+        onClick={onCancelPicker}
+      >
+        取消
+      </span>
 
       {/* 确定按钮 */}
-      <span className={[styles.btn, styles.ok].join(' ')}>确定</span>
+      <span className={[styles.btn, styles.ok].join(' ')} onClick={onOkPicker}>
+        确定
+      </span>
     </Flex>
   )
 }
@@ -20,7 +27,7 @@ function FilterFooter({ className, style }) {
 // props校验
 FilterFooter.propTypes = {
   className: PropTypes.string,
-  style: PropTypes.object
+  style: PropTypes.object,
 }
 
 export default FilterFooter

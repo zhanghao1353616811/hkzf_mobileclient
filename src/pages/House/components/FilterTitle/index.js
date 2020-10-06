@@ -13,13 +13,13 @@ const titleList = [
 ]
 
 export default function FilterTitle(props) {
-  console.log(props)
   const { onTitleClick, titleSelectedStatus } = props
   return (
     // 函数组件
     <Flex align="center" className={styles.root}>
       {titleList.map((item) => {
         return (
+          // 子传父->子组件调用父组件的方法
           <Flex.Item key={item.type} onClick={() => onTitleClick(item.type)}>
             {/* 选中类名： selected */}
             <span
