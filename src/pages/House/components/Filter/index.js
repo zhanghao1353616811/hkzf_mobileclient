@@ -6,6 +6,9 @@ import FilterPicker from '../FilterPicker'
 
 import styles from './index.module.css'
 
+import { getHouseCondition } from '../../../../utils/api/house'
+import { getCurrentCity } from '../../../../utils/index'
+
 // 标题高亮状态(默认false)
 const titleSelectedStatus = {
   area: false,
@@ -20,6 +23,10 @@ export default class Filter extends Component {
     titleSelectedStatus: { ...titleSelectedStatus },
     // 打开当前type状态
     openType: '',
+  }
+
+  componentDidMount() {
+    this.getToHouseCondition()
   }
 
   // 过滤器title点击时触发的方法 (父组件)
@@ -40,12 +47,13 @@ export default class Filter extends Component {
     return openType === 'area' || openType === 'mode' || openType === 'price'
   }
 
-  // 确定的时候关闭 picker
+  // 确定(关闭遮罩层)的时候关闭 picker
   onOkPicker = () => {
     this.setState({
       openType: '',
     })
   }
+
   // 取消的时候关闭 picker
   onCancelPicker = () => {
     this.setState({
@@ -53,11 +61,26 @@ export default class Filter extends Component {
     })
   }
 
+  // 获取过滤条件数据
+  getToHouseCondition = async () => {
+    // 获取当前城市ID (value值就是城市的ID)
+    const { value } = await getCurrentCity()
+    const { status, data } = await getHouseCondition(value)
+    if (status === 200) {
+      // 存储到state上 刷新时会刷新当前页面数据 => 我们需要点击时才加载数据 => 储存到this上(轻量的state)
+      this.filterData = data
+    }
+  }
+
   render() {
     return (
       <div className={styles.root}>
         {/* 前三个菜单的遮罩层 */}
-        {this.isShowPicker() ? <div className={styles.mask} onClick={this.onOkPicker} /> : ''}
+        {this.isShowPicker() ? (
+          <div className={styles.mask} onClick={this.onOkPicker} />
+        ) : (
+          ''
+        )}
 
         <div className={styles.content}>
           {/* 标题栏 */}
@@ -68,7 +91,14 @@ export default class Filter extends Component {
           />
 
           {/* 前三个菜单对应的内容： */}
-          {this.isShowPicker() ? <FilterPicker onOkPicker={this.onOkPicker} onCancelPicker={this.onCancelPicker} /> : ''}
+          {this.isShowPicker() ? (
+            <FilterPicker
+              onOkPicker={this.onOkPicker}
+              onCancelPicker={this.onCancelPicker}
+            />
+          ) : (
+            ''
+          )}
 
           {/* 最后一个菜单对应的内容： */}
           {/* <FilterMore /> */}
