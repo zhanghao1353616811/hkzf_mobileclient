@@ -72,15 +72,50 @@ export default class Filter extends Component {
     }
   }
 
+  // 处理Picker组件的数据
+  renderFilterPicker = () => {
+    if (this.isShowPicker()) {
+      const { openType } = this.state
+      // 处理后端拿到的筛选条件数据
+      const { area, subway, rentType, price } = this.filterData
+      let data = [],
+      // 控制PickerView的列数
+      cols = 1
+      switch (openType) {
+        case 'area':
+          cols = 3
+          // 获取当前选中的数据
+          data = [area, subway]
+          break
+        case 'mode':
+          data = rentType
+          break
+        case 'price':
+          data = price
+          break
+        default:
+          break
+      }
+      return (
+        <FilterPicker
+          data={data}
+          cols={cols}
+          onOkPicker={this.onOkPicker}
+          onCancelPicker={this.onCancelPicker}
+        />
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     return (
       <div className={styles.root}>
         {/* 前三个菜单的遮罩层 */}
         {this.isShowPicker() ? (
           <div className={styles.mask} onClick={this.onOkPicker} />
-        ) : (
-          ''
-        )}
+        ) : null}
 
         <div className={styles.content}>
           {/* 标题栏 */}
@@ -91,14 +126,7 @@ export default class Filter extends Component {
           />
 
           {/* 前三个菜单对应的内容： */}
-          {this.isShowPicker() ? (
-            <FilterPicker
-              onOkPicker={this.onOkPicker}
-              onCancelPicker={this.onCancelPicker}
-            />
-          ) : (
-            ''
-          )}
+          {this.renderFilterPicker()}
 
           {/* 最后一个菜单对应的内容： */}
           {/* <FilterMore /> */}
