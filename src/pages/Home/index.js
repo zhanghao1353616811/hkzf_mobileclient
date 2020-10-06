@@ -43,7 +43,7 @@ class Home extends Component {
         {/* 二级路由配置 */}
         <Route exact path="/home" component={Index} />
         <Route path="/home/house" component={House} />
-        <House path="/home/profile" component={Profile} />
+        <Route path="/home/profile" component={Profile} />
         {/* 全局导航 */}
         <div className="barBox">
           <TabBar
