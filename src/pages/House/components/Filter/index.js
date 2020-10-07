@@ -17,6 +17,14 @@ const titleSelectedStatus = {
   more: false,
 }
 
+// 选中数据维护(测试)
+const selectedValues = {
+  area: ['area', 'null'],
+  mode: ['null'],
+  price: ['null'],
+  more: []
+}
+
 export default class Filter extends Component {
   // 设置高亮显示的状态
   state = {
@@ -27,6 +35,8 @@ export default class Filter extends Component {
 
   componentDidMount() {
     this.getToHouseCondition()
+    // 实例存储选中的条件数据
+    this.selectedValues = {...selectedValues}
   }
 
   // 过滤器title点击时触发的方法 (父组件)
@@ -48,7 +58,11 @@ export default class Filter extends Component {
   }
 
   // 确定(关闭遮罩层)的时候关闭 picker
-  onOkPicker = () => {
+  onOkPicker = (filter) => {
+    // 当前选中的type
+    const { openType } = this.state
+    // 确定的时候根据openType存储当前选中的值
+    this.selectedValues[openType] = filter
     this.setState({
       openType: '',
     })
@@ -96,10 +110,15 @@ export default class Filter extends Component {
         default:
           break
       }
+      // 获取picker选中的值
+      const selVal = this.selectedValues[openType]
       return (
         <FilterPicker
           data={data}
+          value={selVal}
           cols={cols}
+          // 给组件添加 key={openType} => (key发生变化 => 会销毁组件 => 重新渲染)
+          key={openType}
           onOkPicker={this.onOkPicker}
           onCancelPicker={this.onCancelPicker}
         />
