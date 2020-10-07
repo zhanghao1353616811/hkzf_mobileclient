@@ -22,7 +22,7 @@ const selectedValues = {
   area: ['area', 'null'],
   mode: ['null'],
   price: ['null'],
-  more: []
+  more: [],
 }
 
 export default class Filter extends Component {
@@ -36,7 +36,7 @@ export default class Filter extends Component {
   componentDidMount() {
     this.getToHouseCondition()
     // 实例存储选中的条件数据
-    this.selectedValues = {...selectedValues}
+    this.selectedValues = { ...selectedValues }
   }
 
   // 过滤器title点击时触发的方法 (父组件)
@@ -57,14 +57,41 @@ export default class Filter extends Component {
     return openType === 'area' || openType === 'mode' || openType === 'price'
   }
 
+  // 处理高亮(已经选择条件的筛选器title)
+  handlerSel = () => {
+    // 创建新的标题选中状态对象
+    const newTitleSelStatus = {}
+    Object.keys(this.selectedValues).forEach((item) => {
+      // 获取当前过滤器选中值currFilterData =>数组
+      const currFilterData = this.selectedValues[item]
+      if (
+        (item === 'area' && currFilterData[1] !== 'null') ||
+        currFilterData[0] === 'subway'
+      ) {
+        newTitleSelStatus.area = true
+      } else if (item === 'mode' && currFilterData[0] !== 'null') {
+        newTitleSelStatus.mode = true
+      } else if (item === 'price' && currFilterData[0] !== 'null') {
+        newTitleSelStatus.price = true
+      } else {
+        newTitleSelStatus[item] = false
+      }
+    })
+    return newTitleSelStatus
+  }
+
   // 确定(关闭遮罩层)的时候关闭 picker
   onOkPicker = (filter) => {
     // 当前选中的type
     const { openType } = this.state
     // 确定的时候根据openType存储当前选中的值
     this.selectedValues[openType] = filter
+    // 处理选中后的高亮显示
+    const newSelStaus = this.handlerSel()
     this.setState({
       openType: '',
+      // 根据是否选中设置要高亮的title
+      titleSelectedStatus: newSelStaus,
     })
   }
 
@@ -72,6 +99,7 @@ export default class Filter extends Component {
   onCancelPicker = () => {
     this.setState({
       openType: '',
+      titleSelectedStatus: this.handlerSel(),
     })
   }
 
@@ -93,8 +121,8 @@ export default class Filter extends Component {
       // 处理后端拿到的筛选条件数据
       const { area, subway, rentType, price } = this.filterData
       let data = [],
-      // 控制PickerView的列数
-      cols = 1
+        // 控制PickerView的列数
+        cols = 1
       switch (openType) {
         case 'area':
           cols = 3
