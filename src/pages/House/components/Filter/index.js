@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import FilterTitle from '../FilterTitle'
 import FilterPicker from '../FilterPicker'
-// import FilterMore from '../FilterMore'
+import FilterMore from '../FilterMore'
 
 import styles from './index.module.css'
 
@@ -156,6 +156,30 @@ export default class Filter extends Component {
     }
   }
 
+  // 1. 创建renderFilterMore方法
+  // 2. 根据openType控制显示和隐藏
+  // 3. 传递组件需要的数据、确定和取消事件方法
+  // filterMore筛选器
+  renderFilterMore = () => {
+    const { openType } = this.state
+    if (openType === 'more') {
+      // 传递筛选器数据
+      const { roomType, oriented, floor, characteristic } = this.filterData
+      const data = { roomType, oriented, floor, characteristic }
+      const selVal = this.selectedValues[openType]
+      return (
+        <FilterMore
+          data={data}
+          value={selVal}
+          onOkPicker={this.onOkPicker}
+          onCancelPicker={this.onCancelPicker}
+        />
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     return (
       <div className={styles.root}>
@@ -177,6 +201,7 @@ export default class Filter extends Component {
 
           {/* 最后一个菜单对应的内容： */}
           {/* <FilterMore /> */}
+          {this.renderFilterMore()}
         </div>
       </div>
     )
