@@ -28,7 +28,6 @@ export default class FilterMore extends Component {
       // 没选择就添加
       newSelected.push(currVal)
     }
-    console.log(newSelected);
     this.setState({
       selectedVal: newSelected,
     })

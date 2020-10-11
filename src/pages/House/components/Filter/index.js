@@ -73,6 +73,8 @@ export default class Filter extends Component {
         newTitleSelStatus.mode = true
       } else if (item === 'price' && currFilterData[0] !== 'null') {
         newTitleSelStatus.price = true
+      } else if (item === 'more' && currFilterData.length > 0) {
+        newTitleSelStatus.more = true
       } else {
         newTitleSelStatus[item] = false
       }
