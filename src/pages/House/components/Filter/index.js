@@ -90,11 +90,17 @@ export default class Filter extends Component {
     this.selectedValues[openType] = filter
     // 处理选中后的高亮显示
     const newSelStaus = this.handlerSel()
-    this.setState({
-      openType: '',
-      // 根据是否选中设置要高亮的title
-      titleSelectedStatus: newSelStaus,
-    })
+    this.setState(
+      {
+        openType: '',
+        // 根据是否选中设置要高亮的title
+        titleSelectedStatus: newSelStaus,
+      },
+      // 处理筛选条件数据
+      () => {
+        this.handlerFilters()
+      }
+    )
   }
 
   // 取消的时候关闭 picker
@@ -182,6 +188,34 @@ export default class Filter extends Component {
     }
   }
 
+  // 处理筛选器数据
+  handlerFilters = () => {
+    // 1、获取筛选器已经选择的数据
+    const { area, mode, price, more } = this.selectedValues
+    // 2、根据后台需要的数据格式进行处理
+    const filterData = {}
+    //  area | subway
+    let areaKey = area[0]
+    let areaVal
+    if (area.length === 2) {
+      areaVal = area[1]
+    } else {
+      // 如果第三位 === 'null'
+      if (area[2] !== 'null') {
+        areaVal = area[2]
+      } else {
+        areaVal = area[1]
+      }
+    }
+    filterData[areaKey] = areaVal
+    //  mode
+    filterData.rentType = mode[0]
+    filterData.price = price[0]
+    filterData.more = more.join(',')
+    console.log(filterData, 'filterData')
+    return filterData
+    // 2、根据后台需要的数据格式进行处理
+  }
   render() {
     return (
       <div className={styles.root}>
