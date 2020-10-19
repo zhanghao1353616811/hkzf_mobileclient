@@ -1,6 +1,8 @@
 .root {
   position: relative;
   z-index: 3;
+  /* 设置高度40px */
+  height: 40px;
 }
 
 .mask {
@@ -14,7 +16,9 @@
 }
 
 .content {
-  position: relative;
+  /* 相对改绝对 */
+  position: absolute;
+  width: 100%;
   z-index: 3;
   background-color: #fff;
 }

@@ -45,6 +45,11 @@
   height: 100%;
 }
 
+ /* 样式被层叠 => 则需要提高样式的优先级 */
+ .houseHeight {
+   height: 100% !important;
+ }
+
 .loading {
   line-height: 120px;
   text-align: center;
