@@ -96,9 +96,9 @@ export default class Filter extends Component {
         // 根据是否选中设置要高亮的title
         titleSelectedStatus: newSelStaus,
       },
-      // 处理筛选条件数据
       () => {
-        this.handlerFilters()
+        // 把筛选条件数据传递给父组件
+        this.props.onFilter(this.handlerFilters())
       }
     )
   }
@@ -212,10 +212,9 @@ export default class Filter extends Component {
     filterData.rentType = mode[0]
     filterData.price = price[0]
     filterData.more = more.join(',')
-    console.log(filterData, 'filterData')
     return filterData
-    // 2、根据后台需要的数据格式进行处理
   }
+  
   render() {
     return (
       <div className={styles.root}>

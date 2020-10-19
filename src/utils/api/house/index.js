@@ -12,3 +12,13 @@ export function getHouseCondition(id) {
     },
   })
 }
+
+// 获取房源列表数据
+export function getHouseList(id,data) {
+  return axios.get('/houses', {
+    params: {
+      id,
+      ...data
+    },
+  })
+}
