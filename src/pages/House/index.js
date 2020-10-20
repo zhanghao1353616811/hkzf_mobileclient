@@ -50,7 +50,7 @@ export default class HouseList extends React.Component {
       data: { list, count },
     } = await getHouseList(this.cityId, this.filterData)
     if (status === 200) {
-      if (count>0) {
+      if (count > 0) {
         Toast.success(`获取到${count}条房源信息`, 2)
       }
       this.setState({
@@ -76,7 +76,16 @@ export default class HouseList extends React.Component {
     }
     // 处理图片地址
     currItem.src = BASE_URL + currItem.houseImg
-    return <HouseItem {...currItem} key={key} style={style} />
+    return (
+      <HouseItem
+        onClick={() => {
+          this.props.history.push(`/detail/${currItem.houseCode}`)
+        }}
+        {...currItem}
+        key={key}
+        style={style}
+      />
+    )
   }
 
   // 判断列表中的每一行是否加载完成
@@ -107,8 +116,8 @@ export default class HouseList extends React.Component {
 
   renderHouseList = () => {
     const { count } = this.state
-    return (
-      count>0?<InfiniteLoader
+    return count > 0 ? (
+      <InfiniteLoader
         isRowLoaded={this.isRowLoaded}
         loadMoreRows={this.loadMoreRows}
         // 远程数据总条数
@@ -130,7 +139,9 @@ export default class HouseList extends React.Component {
             )}
           </AutoSizer>
         )}
-      </InfiniteLoader>:<Nothouse>没有更多房源</Nothouse>
+      </InfiniteLoader>
+    ) : (
+      <Nothouse>没有更多房源</Nothouse>
     )
   }
 
