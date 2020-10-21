@@ -5,7 +5,7 @@
 import { getCityInfo } from './api/city'
 
 // 复用
-const CURR_CITY = 'hkzf_city'
+const CURR_CITY = 'hkzf_city', TOKEN = 'hkzf_token'
 
 // 本地存储
 export const getLocalData = (key) => {
@@ -52,4 +52,4 @@ export function getCurrentCity() {
   }
 }
 
-export { CURR_CITY }
+export { CURR_CITY, TOKEN }
