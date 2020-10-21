@@ -3,14 +3,15 @@ import { Flex, WingBlank, WhiteSpace, NavBar, Toast } from 'antd-mobile'
 
 import { Link } from 'react-router-dom'
 import { withFormik } from 'formik'
+import * as yup from 'yup'
 
 import styles from './index.module.css'
 import { getUserLogin } from '../../utils/api/user'
 import { setLocalData, TOKEN } from '../../utils'
 
 // 验证规则：
-// const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
-// const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
+const REG_UNAME = /^[a-zA-Z_\d]{5,8}$/
+const REG_PWD = /^[a-zA-Z_\d]{5,12}$/
 
 class Login extends Component {
   // 设置状态数据
@@ -47,14 +48,8 @@ class Login extends Component {
 
   render() {
     // console.log(this.props);
-    const {
-      values,
-      touched,
-      errors,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-    } = this.props
+    const { values, errors, handleChange, handleSubmit } = this.props
+    console.log(errors, '12')
     return (
       <div className={styles.root}>
         {/* 顶部导航 */}
@@ -74,7 +69,7 @@ class Login extends Component {
               />
             </div>
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
-            {/* <div className={styles.error}>账号为必填项</div> */}
+            <div className={styles.error}>{errors.username}</div>
             <div className={styles.formItem}>
               <input
                 value={values.password}
@@ -86,7 +81,7 @@ class Login extends Component {
               />
             </div>
             {/* 长度为5到12位，只能出现数字、字母、下划线 */}
-            {/* <div className={styles.error}>账号为必填项</div> */}
+            <div className={styles.error}>{errors.password}</div>
             <div className={styles.formSubmit}>
               <button
                 onClick={handleSubmit}
@@ -109,23 +104,18 @@ class Login extends Component {
 }
 
 const LoginForm = withFormik({
+  // 1. 提供表单的状态数据；2. 当前表单的input的name属性值一一对应
   mapPropsToValues: () => ({ username: '', password: '' }),
-
-  // Custom sync validation
-  // validate: (values) => {
-  //   const errors = {}
-
-  //   if (!values.name) {
-  //     errors.name = 'Required'
-  //   }
-
-  //   return errors
-  // },
+    // 验证表单
+  validationSchema: yup.object().shape({
+    username: yup.string().required('请输入用户名').matches(REG_UNAME,'长度为5到8位，只能出现数字、字母、下划线'),
+    password: yup.string().required('请输入密码').matches(REG_PWD, '长度为5到12位，只能出现数字、字母、下划线'),
+  }),
 
   // 登录提交表单
   handleSubmit: async (values, { props }) => {
     // 1、获取表单值
-    const {username,password} = values
+    const { username, password } = values
     let FormData = { username, password }
     // 2、发送请求登录
     const { status, data, description } = await getUserLogin(FormData)
@@ -133,16 +123,11 @@ const LoginForm = withFormik({
       let token = data.token
       Toast.success(description, 2)
       // 存储token到本地
-      setLocalData(TOKEN,token)
+      setLocalData(TOKEN, token)
       props.history.push('/home/profile')
     } else {
       Toast.fail(description, 2)
     }
-
-    // setTimeout(() => {
-    //   alert(JSON.stringify(values, null, 2))
-    //   setSubmitting(false)
-    // }, 1000)
   },
 
   displayName: 'BasicForm',
