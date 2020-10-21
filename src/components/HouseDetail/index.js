@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Carousel, Flex, Modal, Toast, NavBar, Icon } from 'antd-mobile'
+import { Carousel, Flex, NavBar, Icon } from 'antd-mobile'
 import HouseItem from '../HouseItem'
 import styles from './index.module.css'
 import HousePackage from '../HousePackage'
@@ -35,7 +35,7 @@ const recommendHouses = [
 ]
 
 // 百度地图
-const BMap = window.BMap
+const BMap = window.BMapGL
 
 const labelStyle = {
   position: 'absolute',
@@ -52,7 +52,7 @@ const labelStyle = {
   userSelect: 'none',
 }
 
-const alert = Modal.alert
+// const alert = Modal.alert
 
 export default class HouseDetail extends Component {
   state = {
@@ -163,13 +163,13 @@ export default class HouseDetail extends Component {
   renderMap(community, coord) {
     const { latitude, longitude } = coord
 
-    const map = new window.BMapGL.Map('map')
-    const point = new window.BMapGL.Point(longitude, latitude)
+    const map = new BMap.Map('map')
+    const point = new BMap.Point(longitude, latitude)
     map.centerAndZoom(point, 17)
 
-    const label = new window.BMapGL.Label('', {
+    const label = new BMap.Label('', {
       position: point,
-      offset: new window.BMapGL.Size(0, -36),
+      offset: new BMap.Size(0, -36),
     })
 
     label.setStyle(labelStyle)
