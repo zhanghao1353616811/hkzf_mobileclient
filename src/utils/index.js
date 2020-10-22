@@ -5,15 +5,37 @@
 import { getCityInfo } from './api/city'
 
 // 复用
-const CURR_CITY = 'hkzf_city', TOKEN = 'hkzf_token'
+const CURR_CITY = 'hkzf_city',
+  TOKEN = 'hkzf_token'
+
+// token的封装
+// 获取token
+export function getToken() {
+  return getLocalData(TOKEN)
+}
+
+// 设置token
+export function setToken(value) {
+  return setLocalData(TOKEN, value)
+}
+
+// 移除token
+export function removeToken() {
+  return removeLocalData(TOKEN)
+}
+
+// 判断是否登录 => boolean
+const isAuth = () => !!getToken()
 
 // 本地存储
 export const getLocalData = (key) => {
   return localStorage.getItem(key)
 }
+
 export const setLocalData = (key, val) => {
   return localStorage.setItem(key, val)
 }
+
 export const removeLocalData = (key) => {
   return localStorage.removeItem(key)
 }
@@ -52,4 +74,4 @@ export function getCurrentCity() {
   }
 }
 
-export { CURR_CITY, TOKEN }
+export { CURR_CITY, TOKEN, isAuth }
