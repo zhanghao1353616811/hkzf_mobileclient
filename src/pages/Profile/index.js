@@ -118,6 +118,7 @@ export default class Profile extends Component {
       userInfo: { nickname, avatar },
       isLogin,
     } = this.state
+    
     return (
       <div className={styles.root}>
         {/* 个人信息 */}
@@ -136,7 +137,7 @@ export default class Profile extends Component {
               />
             </div>
             <div className={styles.user}>
-              <div className={styles.name}>{isLogin ? nickname : '游客'}</div>
+              <div className={styles.name}>{nickname||'游客'}</div>
               {this.renderUser()}
             </div>
           </div>

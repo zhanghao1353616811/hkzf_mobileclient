@@ -10,19 +10,11 @@ export function login(data) {
 }
 
 // 获取用户信息
-export function getUserInfo(token) {
-  return axios.get('/user', {
-    headers: {
-      authorization: token,
-    },
-  })
+export function getUserInfo() {
+  return axios.get('/user')
 }
 
 // 用户登出接口
-export function logout(token) {
-  return axios.post('/user/logout', null, {
-    headers: {
-      authorization: token,
-    },
-  })
+export function logout() {
+  return axios.post('/user/logout')
 }
