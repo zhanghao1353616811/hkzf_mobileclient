@@ -34,6 +34,15 @@ export default class Search extends Component {
     ))
   }
 
+  // 处理搜索
+  handlerSearch = (value) => {
+    // 去空格
+    let searchVal = value.trim()
+    this.setState({
+      searchTxt: searchVal
+    })
+  }
+
   render() {
     const { history } = this.props
     const { searchTxt } = this.state
@@ -45,6 +54,7 @@ export default class Search extends Component {
           placeholder="请输入小区或地址"
           value={searchTxt}
           showCancelButton={true}
+          onChange={this.handlerSearch}
           onCancel={() => history.replace('/rent/add')}
         />
 
