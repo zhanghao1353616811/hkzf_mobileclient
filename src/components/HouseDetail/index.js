@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
-import { Carousel, Flex, NavBar, Icon } from 'antd-mobile'
+
+import { Carousel, Flex, NavBar, Icon, Modal, Toast } from 'antd-mobile'
 import HouseItem from '../HouseItem'
-import styles from './index.module.css'
 import HousePackage from '../HousePackage'
+import styles from './index.module.css'
+
 import { BASE_URL } from '../../utils/axios'
 import { getHouseDetail } from '../../utils/api/house'
+import { isFavorites, addFavorites, delFavorites } from '../../utils/api/user'
+import { isAuth } from '../../utils'
 
 // 猜你喜欢
 const recommendHouses = [
@@ -52,7 +56,7 @@ const labelStyle = {
   userSelect: 'none',
 }
 
-// const alert = Modal.alert
+const alert = Modal.alert
 
 export default class HouseDetail extends Component {
   state = {
@@ -99,21 +103,35 @@ export default class HouseDetail extends Component {
   componentDidMount() {
     // 获取配置好的路由参数：
     // console.log('路由参数对象：', this.props.match.params)
-    // console.log(this.props)
 
     // 获取房屋数据
     this.getHouseDetail()
+    this.checkFavorite()
+  }
+
+  checkFavorite = async () => {
+    const { id } = this.props.match.params
+    if (isAuth()) {
+      // 登录了查询下当前房源是否收藏过 => 调用接口检查
+      const {
+        status,
+        data: { isFavorite },
+      } = await isFavorites(id)
+      if (status === 200) {
+        this.setState({
+          isFavorite,
+        })
+      }
+    }
   }
 
   /* 
       收藏房源：
-
       1 给收藏按钮绑定单击事件，创建方法 handleFavorite 作为事件处理程序。
       2 调用 isAuth 方法，判断是否登录。
       3 如果未登录，则使用 Modal.alert 提示用户是否去登录。
       4 如果点击取消，则不做任何操作。
       5 如果点击去登录，就跳转到登录页面，同时传递 state（登录后，再回到房源收藏页面）。
-      
       6 根据 isFavorite 判断，当前房源是否收藏。
       7 如果未收藏，就调用添加收藏接口，添加收藏。
       8 如果已收藏，就调用删除收藏接口，去除收藏。
@@ -126,6 +144,45 @@ export default class HouseDetail extends Component {
         }
       ])
     */
+  handleFavorite = async () => {
+    const { isFavorite } = this.state
+    const { id } = this.props.match.params
+    if (isAuth()) {
+      if (isFavorite) {
+        // 收藏 => 取消
+        const res = await delFavorites(id)
+        if (res.status === 200) {
+          this.setState({
+            isFavorite: false,
+          })
+          Toast.info('取消收藏')
+        }
+      } else {
+        // 未收藏 => 收藏
+        const res = await addFavorites(id)
+        if (res.status === 200) {
+          this.setState({
+            isFavorite: true,
+          })
+          Toast.info('收藏成功')
+        }
+      }
+    } else {
+      alert('提示', '登录后才能收藏房源，是否登录', [
+        { text: '取消' },
+        {
+          text: '去登录',
+          onPress: () => {
+            // 1、跳到登录
+            // 2、传递当前页面的 backUrl
+            // 3、登录成功后 => 再跳回当前页面
+            let path = this.props.location.pathname
+            this.props.history.push('/login', { backUrl: path })
+          },
+        },
+      ])
+    }
+  }
 
   // 获取房屋详细信息
   async getHouseDetail() {
@@ -225,7 +282,7 @@ export default class HouseDetail extends Component {
         <NavBar
           mode="dark"
           icon={<Icon type="left" />}
-          onLeftClick={() => this.props.history.goBack()}
+          onLeftClick={() => this.props.history.push('/home/house')}
           rightContent={[<i key="share" className="iconfont icon-share" />]}
         >
           房屋详情

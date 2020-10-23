@@ -24,10 +24,8 @@ axios_instance.interceptors.request.use(
     if (url.startsWith('/user') && url !== '/user/login') {
     // 统一设置headers的token
       headers.authorization = getToken()
-      console.log(config)
     }
     return config
-    
   },
   function (error) {
     return Promise.reject(error)

@@ -109,7 +109,13 @@ const LoginForm = withFormik({
       Toast.success(description, 2)
       // 存储token到本地
       setToken(token)
-      props.history.push('/home/profile')
+      // 默认跳转到个人中心
+      let path = '/home/profile'
+      // 判断是否有backUrl => 有就跳到backUrl
+      if (props.location.state && props.location.state.backUrl) {
+        path = props.location.state.backUrl
+      }
+      props.history.push(path)
     } else {
       Toast.fail(description, 2)
     }

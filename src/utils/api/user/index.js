@@ -18,3 +18,18 @@ export function getUserInfo() {
 export function logout() {
   return axios.post('/user/logout')
 }
+
+// 房屋是否收藏接口
+export function isFavorites(id) {
+  return axios.get(`/user/favorites/${id}`)
+}
+
+// 添加收藏
+export function addFavorites(id) {
+  return axios.post(`/user/favorites/${id}`)
+}
+
+// 取消收藏
+export function delFavorites(id) {
+  return axios.delete(`/user/favorites/${id}`)
+}

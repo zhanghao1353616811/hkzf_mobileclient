@@ -57,7 +57,7 @@ export default class Profile extends Component {
 
   // 退出登录
   logout = () => {
-    alert('提示:', '是否确定退出', [
+    alert('提示', '是否确定退出', [
       { text: '取消' },
       {
         text: '确定',
