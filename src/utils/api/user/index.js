@@ -33,3 +33,8 @@ export function addFavorites(id) {
 export function delFavorites(id) {
   return axios.delete(`/user/favorites/${id}`)
 }
+
+// 获取已发布房源
+export const getUserHouses = () => {
+  return axios.get('/user/houses')
+}

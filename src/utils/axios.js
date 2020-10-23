@@ -1,12 +1,9 @@
 /**
  * 全局 axios
  */
-
-//  导入axios
-import axios from 'axios'
+import axios from 'axios' //  导入axios
 import { Toast } from 'antd-mobile'
 import { getToken } from '../utils/index'
-
 // 后端接口基础路径
 const BASE_URL = 'http://api-haoke-dev.itheima.net'
 
@@ -22,7 +19,7 @@ axios_instance.interceptors.request.use(
     const { url, headers } = config
     // url.startsWith => 判断url地址是不是以 '/user' 开头
     if (url.startsWith('/user') && url !== '/user/login') {
-    // 统一设置headers的token
+      // 统一设置headers的token
       headers.authorization = getToken()
     }
     return config
@@ -34,7 +31,10 @@ axios_instance.interceptors.request.use(
 
 // 响应拦截器
 axios_instance.interceptors.response.use(
+
   function (response) {
+    console.log(response)
+
     Toast.hide() // 请求成功后关闭loading
     //  返回所需求的数据格式
     const { body, status, description } = response.data
@@ -46,6 +46,7 @@ axios_instance.interceptors.response.use(
     return data
   },
   function (error) {
+    console.log(error, 'error')
     return Promise.reject(error)
   }
 )
