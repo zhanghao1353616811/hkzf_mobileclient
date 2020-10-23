@@ -8,6 +8,7 @@ import { SearchBar } from 'antd-mobile'
 
 import styles from './index.module.css'
 import { getCurrentCity } from '../../../utils'
+import { getCimmnotuyByKey } from '../../../utils/api/city'
 
 export default class Search extends Component {
   state = {
@@ -38,9 +39,28 @@ export default class Search extends Component {
   handlerSearch = (value) => {
     // 去空格
     let searchVal = value.trim()
-    this.setState({
-      searchTxt: searchVal
-    })
+    // 空的时候 => 重置状态数据
+    if (searchVal.length === 0) {
+      return this.setState({
+        searchTxt: '',
+        tipsList: [],
+      })
+    }
+    this.setState(
+      {
+        searchTxt: searchVal,
+      },
+      async () => {
+        const { searchTxt } = this.state
+        // 调用接口查询小区
+        const { status, data } = await getCimmnotuyByKey(this.cityId, searchTxt)
+        if (status === 200) {
+          this.setState({
+            tipsList: data,
+          })
+        }
+      }
+    )
   }
 
   render() {

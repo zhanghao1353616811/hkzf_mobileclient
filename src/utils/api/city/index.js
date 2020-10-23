@@ -8,21 +8,31 @@ import axios from '../../axios'
 export function getCityInfo(name) {
   return axios.get('/area/info', {
     params: {
-      name
-    }
+      name,
+    },
   })
 }
 
 // 获取城市列表数据
-export function getCityList(level=1) {
+export function getCityList(level = 1) {
   return axios.get('/area/city', {
     params: {
-      level
+      level,
     },
   })
 }
 
 // 获取热门城市数据
 export function getHotCity() {
-    return axios.get('/area/hot')
-  }
+  return axios.get('/area/hot')
+}
+
+// 小区关键词查询
+export function getCimmnotuyByKey(id, name) {
+  return axios.get('/area/community', {
+    params: {
+      id,
+      name,
+    },
+  })
+}

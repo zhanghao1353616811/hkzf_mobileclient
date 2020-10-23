@@ -20,13 +20,12 @@ export function getHouseList(id, data, start = 1, end = 20) {
       id,
       ...data,
       start,
-      end
+      end,
     },
   })
 }
 
 // 获取房源详情数据
 export function getHouseDetail(id) {
-  return axios.get(`/houses/${id}`, {
-  })
+  return axios.get(`/houses/${id}`, {})
 }
