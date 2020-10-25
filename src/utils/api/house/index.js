@@ -29,3 +29,8 @@ export function getHouseList(id, data, start = 1, end = 20) {
 export function getHouseDetail(id) {
   return axios.get(`/houses/${id}`, {})
 }
+
+// 房屋图像上传
+export function uploadHouseImg(formData) {
+  return axios.post('/houses/image', formData)
+}

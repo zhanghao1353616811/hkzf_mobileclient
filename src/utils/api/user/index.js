@@ -34,7 +34,12 @@ export function delFavorites(id) {
   return axios.delete(`/user/favorites/${id}`)
 }
 
-// 获取已发布房源
+// 查看已发布房源列表
 export const getUserHouses = () => {
   return axios.get('/user/houses')
+}
+
+// 发布房源
+export const getPubHouse = (data) => {
+  return axios.post('/user/houses',data)
 }

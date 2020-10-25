@@ -39,8 +39,11 @@ function App() {
         {/* 登录 */}
         <Route path="/login" component={Login} />
         {/* 发布房源和管理 */}
+        {/* 管理房源列表 */}
         <Route path="/rent" exact component={Rent} />
+        {/* 发布房源 */}
         <Route path="/rent/add" component={RentAdd} />
+        {/* 搜索小区 */}
         <Route path="/rent/search" component={RentSearch} />
         {/* 地图找房 */}
         <Route path="/map" component={Map} />
