@@ -38,8 +38,8 @@ const recommendHouses = [
   },
 ]
 
-// 百度地图
-const BMap = window.BMapGL
+// 百度地图 API
+const BMap = window.BMap
 
 const labelStyle = {
   position: 'absolute',
@@ -125,25 +125,6 @@ export default class HouseDetail extends Component {
     }
   }
 
-  /* 
-      收藏房源：
-      1 给收藏按钮绑定单击事件，创建方法 handleFavorite 作为事件处理程序。
-      2 调用 isAuth 方法，判断是否登录。
-      3 如果未登录，则使用 Modal.alert 提示用户是否去登录。
-      4 如果点击取消，则不做任何操作。
-      5 如果点击去登录，就跳转到登录页面，同时传递 state（登录后，再回到房源收藏页面）。
-      6 根据 isFavorite 判断，当前房源是否收藏。
-      7 如果未收藏，就调用添加收藏接口，添加收藏。
-      8 如果已收藏，就调用删除收藏接口，去除收藏。
-
-      alert('提示', '登录后才能收藏房源，是否去登录?', [
-        { text: '取消' },
-        {
-          text: '去登录',
-          onPress: () => {}
-        }
-      ])
-    */
   handleFavorite = async () => {
     const { isFavorite } = this.state
     const { id } = this.props.match.params

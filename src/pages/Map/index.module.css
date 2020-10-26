@@ -1,0 +1,29 @@
+/* 不能styles.container使用 webPack将id="container"打包成加了哈希值的唯一值 导致初始化百度地图传进去的加哈希值的container出错
+所即将css模块中的container定义为全局样式 这样才不会被webPack处理*/
+
+/* :global(样式名) {} */
+:global(#container) {
+  height: calc(100% - 45px);
+}
+
+/* 覆盖物样式 */
+.bubble {
+  width: 70px;
+  height: 70px;
+  line-height: 1;
+  display: inline-block;
+  position: absolute;
+  border-radius: 100%;
+  background: rgba(12, 181, 106, 0.9);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  text-align: center;
+  cursor: pointer;
+  /* 覆盖物以点为中心 */
+  left: -35px;
+  top: -35px;
+}
+
+.bubbleName {
+  padding: 18px 0 6px 0;
+}
