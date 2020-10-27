@@ -14,10 +14,10 @@ export function getHouseCondition(id) {
 }
 
 // 获取房源列表数据
-export function getHouseList(id, data, start = 1, end = 20) {
+export function getHouseList(cityId, data, start = 1, end = 20) {
   return axios.get('/houses', {
     params: {
-      id,
+      cityId,
       ...data,
       start,
       end,

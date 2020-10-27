@@ -7,14 +7,25 @@ import { NavBar, Icon } from 'antd-mobile'
 
 // 导入地图样式
 import styles from './index.module.css'
+import HouseItem from '../../components/HouseItem'
 
 import { getCurrentCity } from '../../utils'
+import { BASE_URL } from '../../utils/axios'
 import { getHouseMap } from '../../utils/api/city'
+import { getHouseList } from '../../utils/api/house'
 
 // 百度地图 API
 const BMap = window.BMap
 
 class Map extends Component {
+  // 定义状态数据
+  state = {
+    // 小区的房源列表
+    list: [],
+    // 是否显示房源列表
+    isShowList: false,
+  }
+
   componentDidMount() {
     this.initMap()
   }
@@ -167,10 +178,61 @@ class Map extends Component {
   </div>`)
     // 给html覆盖物添加点击事件
     label.addEventListener('click', () => {
-      console.log('点击小区', value)
+      // 获取小区下的房源列表
+      this.getHouseList(value)
     })
     // 添加覆盖物到地图中显示
     this.map.addOverlay(label)
+  }
+
+  // 根据小区ID获取房源列表
+  getHouseList = async (value) => {
+    const {
+      status,
+      data: { list },
+    } = await getHouseList(value)
+    if (status === 200) {
+      this.setState({
+        list,
+        isShowList: true,
+      })
+    }
+  }
+
+  // 渲染小区下房屋列表
+  renderHouseList = () => {
+    return (
+      <div
+        className={[
+          styles.houseList,
+          this.state.isShowList ? styles.show : '',
+        ].join(' ')}
+      >
+        <div className={styles.titleWrap}>
+          <h1 className={styles.listTitle}>房屋列表</h1>
+          <a className={styles.titleMore} href="/home/house">
+            更多房源
+          </a>
+        </div>
+
+        <div className={styles.houseItems}>
+          {/* 房屋结构 */}
+          {this.state.list.map((item) => (
+            <HouseItem
+              onClick={() =>
+                this.props.history.push(`/detail/${item.houseCode}`)
+              }
+              key={item.houseCode}
+              src={BASE_URL + item.houseImg}
+              title={item.title}
+              desc={item.desc}
+              tags={item.tags}
+              price={item.price}
+            />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   render() {
@@ -186,6 +248,8 @@ class Map extends Component {
         </NavBar>
         {/* 创建地图容器元素 => 百度地图显示位置 */}
         <div id="container"></div>
+        {/* 小区下的列表 */}
+        {this.renderHouseList()}
       </div>
     )
   }
