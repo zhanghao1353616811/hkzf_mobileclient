@@ -59,6 +59,15 @@ class Map extends Component {
       },
       label
     )
+    // 地图移动时 判断列表是否显示  => 关闭 => 给地图实例map添加movestart事件(movestart: 地图移动开始时触发此事件)
+    this.map.addEventListener('movestart', () => {
+      const { isShowList } = this.state
+      if (isShowList) {
+        this.setState({
+          isShowList: false,
+        })
+      }
+    })
   }
 
   // 根据区域渲染覆盖物
@@ -139,7 +148,7 @@ class Map extends Component {
     <p class="${styles.bubbleName}">${areaName}</p>
     <p>${count}套</p>
     </div>`)
-    // 给html覆盖物添加点击事件
+    // 给html覆盖物添加点击事件 => click 左键单击地图时触发此事件
     label.addEventListener('click', () => {
       // 设置显示下一区域的位置和缩放级别 (区下边村)
       this.map.centerAndZoom(point, nextLevel)
@@ -177,9 +186,10 @@ class Map extends Component {
     <i class="${styles.arrow}"></i>
   </div>`)
     // 给html覆盖物添加点击事件
-    label.addEventListener('click', () => {
+    label.addEventListener('click', (e) => {
       // 获取小区下的房源列表
       this.getHouseList(value)
+      this.moveToCenter(e)
     })
     // 添加覆盖物到地图中显示
     this.map.addOverlay(label)
@@ -197,6 +207,18 @@ class Map extends Component {
         isShowList: true,
       })
     }
+  }
+
+  // 根据当前点击的小区位置 做位移
+  moveToCenter = (e) => {
+    // 获取当前视图点击到位置信息
+    const { clientX, clientY } = e.changedTouches[0]
+    // 获取中心点坐标位置 => 位移差值 = 中心点 - 当前小区位置点
+    const x = window.innerWidth / 2 - clientX,
+      y = (window.innerHeight - 330) / 2 - clientY
+    // map.panBy() 将地图在水平位置上移动x像素 垂直位置上移动y像素
+    // 如果指定的像素大于可视区域范围或者在配置中指定没有动画效果 => 则不执行滑动效果
+    this.map.panBy(x, y)
   }
 
   // 渲染小区下房屋列表
