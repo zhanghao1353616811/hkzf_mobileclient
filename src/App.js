@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound'
 
 import HouseDetail from './components/HouseDetail'
 import Login from './components/Login'
+import Registe from './components/Registe'
 import Rent from '../src/pages/Rent'
 import RentAdd from '../src/pages/Rent/Add'
 import RentSearch from '../src/pages/Rent/Search'
@@ -38,6 +39,8 @@ function App() {
         <Route path="/detail/:id" component={HouseDetail} />
         {/* 登录 */}
         <Route path="/login" component={Login} />
+        {/* 注册 */}
+        <Route path="/registe" component={Registe} />
         {/* 发布房源和管理 */}
         {/* 管理房源列表 */}
         <Route path="/rent" exact component={Rent} />

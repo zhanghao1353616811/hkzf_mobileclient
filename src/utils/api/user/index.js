@@ -9,6 +9,11 @@ export function login(data) {
   return axios.post('/user/login', data)
 }
 
+// 用户注册接口
+export function registe(data) {
+  return axios.post('/user/registered', data)
+}
+
 // 获取用户信息
 export function getUserInfo() {
   return axios.get('/user')

@@ -37,9 +37,6 @@ axios_instance.interceptors.response.use(
     //  返回所需求的数据格式
     const { body, status, description } = response.data
     // token过期强制跳转 我也不知道 react 怎么在js中跳转
-    if (status === 400) {
-      window.location.href='/login'
-    }
     const data = {
       status,
       description,
