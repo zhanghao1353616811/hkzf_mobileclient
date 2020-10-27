@@ -37,7 +37,7 @@ export function getCimmnotuyByKey(id, name) {
   })
 }
 
-// 根据传入不同的ID (城市ID => 区ID => 村ID => 小区) 获取不同的地图房源数据
+// 根据传入不同的ID (城市ID => 区ID => 镇ID => 小区) 获取不同的地图房源数据
 export function getHouseMap(id) {
   return axios.get('/area/map', {
     params: {
